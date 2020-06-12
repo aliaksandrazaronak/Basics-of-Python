@@ -35,7 +35,7 @@ def add_to_inventory(inventory, added_items):
             skipped[new_item] += 1
         else:
             inventory[new_item] += 1
-            added_items_count +=1
+            added_items_count += 1
 
     print(f"Added {added_items_count} items to inventory")
     print("Skipped:")
