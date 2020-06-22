@@ -1,7 +1,6 @@
 import pytest
 
 text = "Hello,Python"
-text_separator = "Java"
 
 VALUE_ERROR_MESSAGE = "empty separator"
 
@@ -20,28 +19,17 @@ def my_split(string, separator):
     return final_list
 
 
-# separator = ","
-def test_split_with_comma():
-    assert my_split(text, text_separator) == ['Hello', 'Python']
+@pytest.mark.parametrize(
+    "separator,expected",
+    [(",", ['Hello', 'Python']),
+     ("o", ['Hell', ',Pyth', 'n']),
+     ("th", ['Hello,Py', 'on']),
+     ("Java", ['Hello,Python'])])
+def test_main_actions(separator, expected):
+    assert my_split(text, separator) == expected
 
 
-# separator = "o"
-def test_split_with_existing_character():
-    assert my_split(text, text_separator) == ['Hell', ',Pyth', 'n']
-
-
-# separator = "th"
-def test_split_with_existing_string():
-    assert my_split(text, text_separator) == ['Hello,Py', 'on']
-
-
-# separator = "Java"
-def test_split_with_non_existing_string():
-    assert my_split(text, text_separator) == ['Hello,Python']
-
-
-# separator = ""
 def test_split_with_empty_string():
     with pytest.raises(ValueError) as error:
-        my_split(text, text_separator)
+        my_split(text, "")
     assert VALUE_ERROR_MESSAGE in str(error.value)
