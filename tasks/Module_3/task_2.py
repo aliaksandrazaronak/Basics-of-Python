@@ -33,3 +33,10 @@ def test_split_with_empty_string():
     with pytest.raises(ValueError) as error:
         my_split(text, "")
     assert VALUE_ERROR_MESSAGE in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "expected_text,separator",
+    [("Python is good!", " "), ("Java is cool!", "is"), ("Python pytest pylint", "py")])
+def test_compare_my_split_and_split_functions(expected_text, separator):
+    assert my_split(expected_text, separator) == expected_text.split(separator)
