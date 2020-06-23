@@ -1,8 +1,6 @@
-from collections import defaultdict
-
 import pyinputplus as pyip
 
-ingredients_and_prices = defaultdict()
+ingredients_and_prices = {}
 
 BREAD_PRICE = {"wheat": 1.5, "white": 0.8, "sourdough": 2.1}
 MEAT_PRICE = {"chicken": 5, "turkey": 3.2, "ham": 4.1, "tofu": 5.5}

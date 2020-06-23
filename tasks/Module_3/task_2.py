@@ -1,7 +1,5 @@
 import pytest
 
-text = "Hello,Python"
-
 VALUE_ERROR_MESSAGE = "empty separator"
 
 
@@ -27,12 +25,13 @@ def my_split(string, separator):
      ("th", ['Hello,Py', 'on']),
      ("Java", ['Hello,Python'])])
 def test_main_actions(separator, expected):
+    text = "Hello,Python"
     assert my_split(text, separator) == expected
 
 
 def test_split_with_empty_string():
     with pytest.raises(ValueError) as error:
-        my_split(text, "")
+        my_split("Empty String!", "")
     assert VALUE_ERROR_MESSAGE in str(error.value)
 
 
