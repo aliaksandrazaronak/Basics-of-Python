@@ -37,7 +37,7 @@ def test_split_with_empty_string():
 
 
 @pytest.mark.parametrize(
-    "test,separator",
+    "text,separator",
     [("Dummy text", " "), ("This is a text example", "is"), ("Dummy dummy text", "my")])
-def test_functions(test, separator):
-    assert my_split(test, separator) == test.split(separator)
+def test_functions(text, separator):
+    assert my_split(text, separator) == text.split(separator)
