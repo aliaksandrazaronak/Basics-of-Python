@@ -4,11 +4,11 @@ VALUE_ERROR_MESSAGE = "empty separator"
 
 
 def my_split(string, separator):
-    """Return a list of words divided with separator"""
-    final_list = list()
-    new_string = ""
+    """Return a list of words divided with separator."""
     if separator == "":
         raise ValueError(VALUE_ERROR_MESSAGE)
+    final_list = list()
+    new_string = ""
     for index, character in enumerate(string):
         new_string += character
         if new_string.find(separator) != -1:
@@ -31,12 +31,12 @@ def test_main_actions(separator, expected):
 
 def test_split_with_empty_string():
     with pytest.raises(ValueError) as error:
-        my_split("Empty String!", "")
+        my_split("Dummy text", "")
     assert VALUE_ERROR_MESSAGE in str(error.value)
 
 
 @pytest.mark.parametrize(
     "test,separator",
-    [("Python is good!", " "), ("Java is cool!", "is"), ("Python pytest pylint", "py")])
+    [("Dummy text", " "), ("This is a text example", "is"), ("Dummy dummy text", "my")])
 def test_compare_my_split_and_split_functions(test, separator):
     assert my_split(test, separator) == test.split(separator)
