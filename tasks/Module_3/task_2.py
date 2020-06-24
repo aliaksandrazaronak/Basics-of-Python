@@ -23,7 +23,8 @@ def my_split(string, separator):
     [(",", ['Hello', 'Python']),
      ("o", ['Hell', ',Pyth', 'n']),
      ("th", ['Hello,Py', 'on']),
-     ("Java", ['Hello,Python'])])
+     ("Java", ['Hello,Python']),
+     ("Hello,Python", ['', ''])])
 def test_main_actions(separator, expected):
     text = "Hello,Python"
     assert my_split(text, separator) == expected
@@ -38,5 +39,5 @@ def test_split_with_empty_string():
 @pytest.mark.parametrize(
     "test,separator",
     [("Dummy text", " "), ("This is a text example", "is"), ("Dummy dummy text", "my")])
-def test_compare_my_split_and_split_functions(test, separator):
+def test_functions(test, separator):
     assert my_split(test, separator) == test.split(separator)
