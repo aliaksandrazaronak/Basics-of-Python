@@ -9,7 +9,8 @@ for file in os.listdir():
         new_list.append(file)
 
 for index, file in enumerate(new_list, start=1):
-    if file.find(str(index)) == -1:
-        new_file = FILE_PREFIX + "00" + str(index) + ".txt"
+    if str(index) not in file:
+        file_postfix = str(index).zfill(3)
+        new_file = f"{FILE_PREFIX}{file_postfix}.txt"
         os.rename(file, new_file)
 print(os.listdir())

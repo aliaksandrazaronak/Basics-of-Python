@@ -8,6 +8,8 @@ for dirpath, dirnames, filenames in os.walk('test_folder'):
     print('Directories:', dirnames)
     print('Files:', filenames)
     for file in filenames:
-        if file.find("pdf") != -1 or file.find("jpg") != -1:
+        _, ext = os.path.splitext(file)
+        if ext in ('.pdf', '.jpg'):
             os.makedirs(NEW_FOLDER, exist_ok=True)
-            shutil.copy(dirpath + "\\" + file, NEW_FOLDER)
+            file_path = os.path.join(dirpath, file)
+            shutil.copy(file_path, NEW_FOLDER)
