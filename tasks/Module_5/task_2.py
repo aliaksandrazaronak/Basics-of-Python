@@ -1,9 +1,11 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-LIGHT_WEIGHT_THRESHOLD = 60
-HEAVY_WEIGHT_THRESHOLD = 70
-MAX_WEIGHT_THRESHOLD = 80
+import pyinputplus as pyip
+
+LIGHT_WEIGHT_THRESHOLD = 40
+HEAVY_WEIGHT_THRESHOLD = 50
+MAX_WEIGHT_THRESHOLD = 60
 
 unwanted_stuff = ['rubbish', 'chewed gum', 'used tissue']
 
@@ -15,7 +17,13 @@ class Item:
     price: int
 
 
-map_items = [Item('gold coin', 2, 4), Item('dagger', 3, 1), Item('gold coin', 2, 1), Item('dagger', 5, 8)]
+class Food(Item):
+    def __init__(self, name, attitude, price):
+        super().__init__(name, attitude, price)
+
+
+map_items = [Item('gold coin', 6, 4), Food('bread', 3, 1), Item('rope', 2, 1), Item('arrow', 5, 8)]
+food_items = ["meat", "egg", "bread"]
 
 
 class Inventory:
@@ -30,12 +38,17 @@ class Inventory:
 
         item_total = sum(self.inventory.values())
         print(f"Total number of items: {item_total}")
-        if LIGHT_WEIGHT_THRESHOLD < item_total < HEAVY_WEIGHT_THRESHOLD:
+        if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your backpack weighs a lot, your stamina runs out quicker!")
-        elif HEAVY_WEIGHT_THRESHOLD < item_total < MAX_WEIGHT_THRESHOLD:
+            return 0.9
+        elif HEAVY_WEIGHT_THRESHOLD <= item_total < MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your equipment is very heavy, you're moving slower than usual!")
+            return 0.8
         elif item_total >= MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: You are overloaded, can't move!")
+            print("Please eat something or drop some items to increase stamina!")
+            return 0
+        return 1.1
 
     def add_new_item_to_inventory(self, item):
         if item.name not in unwanted_stuff:
@@ -55,8 +68,19 @@ class Hero:
 
     def reduce_stamina(self):
         if self.stamina > 0:
-            self.stamina -= 20
+            self.stamina -= 10
         return self.stamina
+
+    def increase_stamina(self):
+        self.stamina += 10
+        print(f"Stamina was increased to {self.stamina}")
+        return self.stamina
+
+
+@dataclass
+class Board:
+    columns: int
+    rows: int
 
 
 level = [
@@ -66,34 +90,33 @@ level = [
 ]
 
 
-def print_level():
-    """ Print level row-wise so that it retains its 2D shape """
+def print_board():
     for row in level:
         print(row)
 
 
-# Object to store the player coords
-player = {'y': 2, 'x': 0}
+board = Board(3, 3)
+player = {'y': board.rows - 1, 'x': 0}
 level[player['y']][player['x']] = 'H'
-print_level()
 
-# Translate keywords into coordinate changes
-move_modifications = {'UP': {'y': -1, 'x': 0},
-                      'DOWN': {'y': 1, 'x': 0},
-                      'LEFT': {'y': 0, 'x': -1},
-                      'RIGHT': {'y': 0, 'x': 1}}
+move_modifications = {'north': {'y': -1, 'x': 0},
+                      'south': {'y': 1, 'x': 0},
+                      'west': {'y': 0, 'x': -1},
+                      'east': {'y': 0, 'x': 1}}
 
-inventory = Inventory()
-inventory.add_new_item_to_inventory(Item('gold coin', 43, 3))
-inventory.add_new_item_to_inventory(Item('rope', 2, 10))
+hero_inventory = Inventory()
+hero_inventory.add_new_item_to_inventory(Item('gold coin', 43, 3))
+hero_inventory.add_new_item_to_inventory(Item('rope', 2, 10))
+hero_inventory.add_new_item_to_inventory(Item('arrow', 5, 4))
+hero_inventory.add_new_item_to_inventory(Item('egg', 5, 4))
 hero = Hero()
 
 # Main game loop
 while True:
-    print(f"Stamina = {hero.stamina}")
-    move = input("Which direction?")
+    print_board()
+    move = input("Which direction?\n")
+    print(f"Hero moved {move}")
 
-    # Give them the option to quit
     if move.lower() == 'exit':
         break
 
@@ -106,25 +129,39 @@ while True:
     new_y = player['y'] + coords['y']
     new_x = player['x'] + coords['x']
 
-    if 0 <= new_y < 3 and 0 <= new_x < 3:
-        level[player['y']][player['x']] = ' '
+    if 0 <= new_y < board.rows and 0 <= new_x < board.columns:
+
+        level[player['y']][player['x']] = ''
+
+        if level[new_y][new_x] == 'X':
+            added_item = map_items.pop(0)
+            hero_inventory.add_new_item_to_inventory(added_item)
+            print("New item found!")
+            print(f"It's a {added_item.name}")
+
         level[new_y][new_x] = 'H'
 
-        # Update player coords
         player['y'] = new_y
         player['x'] = new_x
 
-        # Show hero's inventory
-        inventory.display_hero_inventory()
+        multiplier = hero_inventory.display_hero_inventory()
 
-        # Reduce_stamina
         stamina = hero.reduce_stamina()
-        if stamina <= 0:
-            print("Stamina is over! The End!")
-            break
-
-        # Print result
+        stamina *= multiplier
+        print(f"Hero's stamina is equal {stamina}")
         print("========================")
-        print_level()
+
+        if stamina <= 0:
+            food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in food_items}
+            if len(food_inventory_items) == 0:
+                print_board()
+                print("Stamina is over! No any food! The End!")
+                break
+            for k in food_inventory_items:
+                response = pyip.inputYesNo(f"Do you want to eat {k}?\n")
+                if response == 'yes':
+                    print(f"Hero has eaten {k}")
+                    hero_inventory.inventory.pop(k)
+                    hero.increase_stamina()
     else:
         print("Oops, out of the board")
