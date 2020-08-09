@@ -115,7 +115,6 @@ hero = Hero()
 while True:
     print_board()
     move = input("Which direction?\n")
-    print(f"Hero moved {move}")
 
     if move.lower() == 'exit':
         break
@@ -124,12 +123,13 @@ while True:
         print("Invalid input")
         continue
 
-    coords = move_modifications[move]
+    coordinates = move_modifications[move]
 
-    new_y = player['y'] + coords['y']
-    new_x = player['x'] + coords['x']
+    new_y = player['y'] + coordinates['y']
+    new_x = player['x'] + coordinates['x']
 
     if 0 <= new_y < board.rows and 0 <= new_x < board.columns:
+        print(f"Hero moved {move}")
 
         level[player['y']][player['x']] = ''
 
@@ -152,6 +152,7 @@ while True:
         print("========================")
 
         if stamina <= 0:
+            print("Please eat something!")
             food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in food_items}
             if len(food_inventory_items) == 0:
                 print_board()
@@ -164,4 +165,4 @@ while True:
                     hero_inventory.inventory.pop(k)
                     hero.increase_stamina()
     else:
-        print("Oops, out of the board")
+        print("Sorry, out of the board! Please choose correct direction")
