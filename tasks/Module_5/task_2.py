@@ -56,8 +56,9 @@ class Inventory:
         return self.inventory
 
     def drop_item_from_inventory(self):
-        removed_item = self.inventory.popitem()
-        print(f"{removed_item} was dropped")
+        item_name = pyip.inputMenu(list(self.inventory.keys()), numbered=True, blank=True)
+        self.inventory.pop(item_name)
+        print(f"{item_name} was dropped")
         return self.inventory
 
 
@@ -152,6 +153,13 @@ while True:
         print("========================")
 
         if stamina <= 0:
+            if len(hero_inventory.inventory) > 0:
+                print("Please drop any item!")
+                response = pyip.inputYesNo(f"Do you want to drop any item?\n")
+                if response == 'yes':
+                    hero_inventory.drop_item_from_inventory()
+                    continue
+
             print("Please eat something!")
             food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in food_items}
             if len(food_inventory_items) == 0:
