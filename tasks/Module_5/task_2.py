@@ -1,5 +1,5 @@
-from collections import defaultdict
 from dataclasses import dataclass
+from tasks.Module_5.task_1 import Inventory, Item
 
 import pyinputplus as pyip
 
@@ -7,14 +7,7 @@ LIGHT_WEIGHT_THRESHOLD = 40
 HEAVY_WEIGHT_THRESHOLD = 50
 MAX_WEIGHT_THRESHOLD = 60
 
-unwanted_stuff = ['rubbish', 'chewed gum', 'used tissue']
-
-
-@dataclass
-class Item:
-    name: str
-    weight: int
-    price: int
+UNWANTED_STUFF = ['rubbish', 'chewed gum', 'used tissue']
 
 
 class Food(Item):
@@ -24,42 +17,6 @@ class Food(Item):
 
 map_items = [Item('gold coin', 6, 4), Food('bread', 3, 1), Item('rope', 2, 1), Item('arrow', 5, 8)]
 food_items = ["meat", "egg", "bread"]
-
-
-class Inventory:
-
-    def __init__(self):
-        self.inventory = defaultdict(int)
-
-    def display_hero_inventory(self):
-        print("\nInventory:")
-        for item_name, item_count in self.inventory.items():
-            print(f"{item_count} {item_name}")
-
-        item_total = sum(self.inventory.values())
-        print(f"Total number of items: {item_total}")
-        if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
-            print("\nCAUTION: Your backpack weighs a lot, your stamina runs out quicker!")
-            return 0.9
-        elif HEAVY_WEIGHT_THRESHOLD <= item_total < MAX_WEIGHT_THRESHOLD:
-            print("\nCAUTION: Your equipment is very heavy, you're moving slower than usual!")
-            return 0.8
-        elif item_total >= MAX_WEIGHT_THRESHOLD:
-            print("\nCAUTION: You are overloaded, can't move!")
-            print("Please eat something or drop some items to increase stamina!")
-            return 0
-        return 1.1
-
-    def add_new_item_to_inventory(self, item):
-        if item.name not in unwanted_stuff:
-            self.inventory[item.name] += item.weight
-        return self.inventory
-
-    def drop_item_from_inventory(self):
-        item_name = pyip.inputMenu(list(self.inventory.keys()), numbered=True, blank=True)
-        self.inventory.pop(item_name)
-        print(f"{item_name} was dropped")
-        return self.inventory
 
 
 class Hero:

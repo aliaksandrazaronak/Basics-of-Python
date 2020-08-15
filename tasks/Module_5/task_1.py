@@ -1,11 +1,13 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
+import pyinputplus as pyip
+
 LIGHT_WEIGHT_THRESHOLD = 60
 HEAVY_WEIGHT_THRESHOLD = 70
 MAX_WEIGHT_THRESHOLD = 80
 
-unwanted_stuff = ['rubbish', 'chewed gum', 'used tissue']
+UNWANTED_STUFF = ['rubbish', 'chewed gum', 'used tissue']
 
 
 @dataclass
@@ -16,50 +18,38 @@ class Item:
 
 
 class Inventory:
-    dragon_loot = [
-        Item('gold coin', 2, 4), Item('chewed gum', 1, 0), Item('dagger', 3, 1),
-        Item('gold coin', 3, 1), Item('gold coin', 2, 1), Item('torch', 5, 10),
-        Item('rubbish', 5, 0), Item('chewed gum', 1, 5), Item('used tissue', 1, 2)]
 
     def __init__(self):
         self.inventory = defaultdict(int)
 
-    def display_hero_inventory(self, hero_inventory):
+    def display_hero_inventory(self):
         print("\nInventory:")
-        for item_name, item_count in hero_inventory.items():
+        for item_name, item_count in self.inventory.items():
             print(f"{item_count} {item_name}")
 
-        item_total = sum(hero_inventory.values())
-        print(f"\nTotal number of items: {item_total}")
-        if LIGHT_WEIGHT_THRESHOLD < item_total < HEAVY_WEIGHT_THRESHOLD:
+        item_total = sum(self.inventory.values())
+        print(f"Total number of items: {item_total}")
+        if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your backpack weighs a lot, your stamina runs out quicker!")
-        elif HEAVY_WEIGHT_THRESHOLD < item_total < MAX_WEIGHT_THRESHOLD:
+            return 0.9
+        elif HEAVY_WEIGHT_THRESHOLD <= item_total < MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your equipment is very heavy, you're moving slower than usual!")
+            return 0.8
         elif item_total >= MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: You are overloaded, can't move!")
-
-    def add_items_to_inventory_from_dragon_loot(self, dragon_loot_items):
-        skipped = defaultdict(int)
-        added_items_count = 0
-        total_items_weight = 0
-
-        for item in dragon_loot_items:
-            if item.name in unwanted_stuff:
-                skipped[item.name] += item.weight
-            else:
-                self.inventory[item.name] += item.weight
-                added_items_count += 1
-                total_items_weight += item.weight
-
-        print(f"Added {added_items_count} items to inventory with total weight of items {total_items_weight}")
-        print("Skipped:")
-        for item_name, item_count in skipped.items():
-            print(f"{item_count} {item_name}")
-        return self.inventory
+            print("Please eat something or drop some items to increase stamina!")
+            return 0
+        return 1.1
 
     def add_new_item_to_inventory(self, item):
-        if item.name not in unwanted_stuff:
+        if item.name not in UNWANTED_STUFF:
             self.inventory[item.name] += item.weight
+        return self.inventory
+
+    def drop_item_from_inventory(self):
+        item_name = pyip.inputMenu(list(self.inventory.keys()), numbered=True, blank=True)
+        self.inventory.pop(item_name)
+        print(f"{item_name} was dropped")
         return self.inventory
 
 
@@ -73,5 +63,4 @@ if __name__ == '__main__':
     inventory.add_new_item_to_inventory(Item('dagger', 3, 8))
     inventory.add_new_item_to_inventory(Item('arrow', 7, 4))
     inventory.add_new_item_to_inventory(Item('arrow', 5, 9))
-    final_hero_inventory = inventory.add_items_to_inventory_from_dragon_loot(inventory.dragon_loot)
-    inventory.display_hero_inventory(final_hero_inventory)
+    inventory.display_hero_inventory()
