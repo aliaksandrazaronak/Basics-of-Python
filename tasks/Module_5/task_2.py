@@ -7,16 +7,8 @@ LIGHT_WEIGHT_THRESHOLD = 40
 HEAVY_WEIGHT_THRESHOLD = 50
 MAX_WEIGHT_THRESHOLD = 60
 
-UNWANTED_STUFF = ['rubbish', 'chewed gum', 'used tissue']
-
-
-class Food(Item):
-    def __init__(self, name, attitude, price):
-        super().__init__(name, attitude, price)
-
-
-map_items = [Item('gold coin', 6, 4), Food('bread', 3, 1), Item('rope', 2, 1), Item('arrow', 5, 8)]
-food_items = ["meat", "egg", "bread"]
+MAP_ITEMS = [Item('gold coin', 6, 4), Item('bread', 3, 1), Item('rope', 2, 1), Item('arrow', 5, 8)]
+FOOD_ITEMS = ["meat", "egg", "bread"]
 
 
 class Hero:
@@ -92,7 +84,7 @@ while True:
         level[player['y']][player['x']] = ''
 
         if level[new_y][new_x] == 'X':
-            added_item = map_items.pop(0)
+            added_item = MAP_ITEMS.pop(0)
             hero_inventory.add_new_item_to_inventory(added_item)
             print("New item found!")
             print(f"It's a {added_item.name}")
@@ -118,7 +110,7 @@ while True:
                     continue
 
             print("Please eat something!")
-            food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in food_items}
+            food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in FOOD_ITEMS}
             if len(food_inventory_items) == 0:
                 print_board()
                 print("Stamina is over! No any food! The End!")
