@@ -94,9 +94,10 @@ while True:
         player['y'] = new_y
         player['x'] = new_x
 
-        multiplier = hero_inventory.display_hero_inventory()
-
+        hero_inventory.display_hero_inventory()
         stamina = hero.reduce_stamina()
+
+        multiplier = hero_inventory.set_weight_multiplier()
         stamina *= multiplier
         print(f"Hero's stamina is equal {stamina}")
         print("========================")

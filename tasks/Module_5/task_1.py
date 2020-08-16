@@ -31,15 +31,11 @@ class Inventory:
         print(f"Total number of items: {item_total}")
         if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your backpack weighs a lot, your stamina runs out quicker!")
-            return 0.9
         elif HEAVY_WEIGHT_THRESHOLD <= item_total < MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: Your equipment is very heavy, you're moving slower than usual!")
-            return 0.8
         elif item_total >= MAX_WEIGHT_THRESHOLD:
             print("\nCAUTION: You are overloaded, can't move!")
             print("Please eat something or drop some items to increase stamina!")
-            return 0
-        return 1.1
 
     def add_new_item_to_inventory(self, item):
         if item.name not in UNWANTED_STUFF:
@@ -51,6 +47,16 @@ class Inventory:
         self.inventory.pop(item_name)
         print(f"{item_name} was dropped")
         return self.inventory
+
+    def set_weight_multiplier(self):
+        item_total = sum(self.inventory.values())
+        if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
+            return 0.9
+        elif HEAVY_WEIGHT_THRESHOLD <= item_total < MAX_WEIGHT_THRESHOLD:
+            return 0.8
+        elif item_total >= MAX_WEIGHT_THRESHOLD:
+            return 0
+        return 1.1
 
 
 if __name__ == '__main__':
