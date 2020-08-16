@@ -9,6 +9,8 @@ MAX_WEIGHT_THRESHOLD = 80
 
 UNWANTED_STUFF = ['rubbish', 'chewed gum', 'used tissue']
 
+FOOD_ITEMS = ["meat", "egg", "bread"]
+
 
 @dataclass
 class Item:
@@ -57,6 +59,9 @@ class Inventory:
         elif item_total >= MAX_WEIGHT_THRESHOLD:
             return 0
         return 1.1
+
+    def food_items(self):
+        return {k: v for k, v in self.inventory.items() if k in FOOD_ITEMS}
 
 
 if __name__ == '__main__':

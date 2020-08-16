@@ -8,7 +8,6 @@ HEAVY_WEIGHT_THRESHOLD = 50
 MAX_WEIGHT_THRESHOLD = 60
 
 MAP_ITEMS = [Item('gold coin', 6, 4), Item('bread', 3, 1), Item('rope', 2, 1), Item('arrow', 5, 8)]
-FOOD_ITEMS = ["meat", "egg", "bread"]
 
 
 class Hero:
@@ -111,7 +110,7 @@ while True:
                     continue
 
             print("Please eat something!")
-            food_inventory_items = {k: v for k, v in hero_inventory.inventory.items() if k in FOOD_ITEMS}
+            food_inventory_items = hero_inventory.food_items()
             if len(food_inventory_items) == 0:
                 print_board()
                 print("Stamina is over! No any food! The End!")
