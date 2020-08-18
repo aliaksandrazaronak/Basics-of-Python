@@ -26,27 +26,25 @@ class Hero:
         return self.stamina
 
 
-@dataclass
+@dataclass()
 class Board:
     columns: int
     rows: int
 
+    level = [
+        ['X', '', 'X'],
+        ['', 'X', ''],
+        ['', 'X', ''],
+    ]
 
-level = [
-    ['X', '', 'X'],
-    ['', 'X', ''],
-    ['', 'X', ''],
-]
-
-
-def print_board():
-    for row in level:
-        print(row)
+    def print_board(self):
+        for row in self.level:
+            print(row)
 
 
 board = Board(3, 3)
 player = {'y': board.rows - 1, 'x': 0}
-level[player['y']][player['x']] = 'H'
+board.level[player['y']][player['x']] = 'H'
 
 move_modifications = {'north': {'y': -1, 'x': 0},
                       'south': {'y': 1, 'x': 0},
@@ -62,7 +60,7 @@ hero = Hero()
 
 # Main game loop
 while True:
-    print_board()
+    board.print_board()
     move = input("Which direction?\n")
 
     if move.lower() == 'exit':
@@ -80,15 +78,15 @@ while True:
     if 0 <= new_y < board.rows and 0 <= new_x < board.columns:
         print(f"Hero moved {move}")
 
-        level[player['y']][player['x']] = ''
+        board.level[player['y']][player['x']] = ''
 
-        if level[new_y][new_x] == 'X':
+        if board.level[new_y][new_x] == 'X':
             added_item = MAP_ITEMS.pop(0)
             hero_inventory.add_new_item_to_inventory(added_item)
             print("New item found!")
             print(f"It's a {added_item.name}")
 
-        level[new_y][new_x] = 'H'
+        board.level[new_y][new_x] = 'H'
 
         player['y'] = new_y
         player['x'] = new_x
@@ -96,7 +94,7 @@ while True:
         hero_inventory.display_hero_inventory()
         stamina = hero.reduce_stamina()
 
-        multiplier = hero_inventory.set_weight_multiplier()
+        multiplier = hero_inventory.get_weight_multiplier()
         stamina *= multiplier
         print(f"Hero's stamina is equal {stamina}")
         print("========================")
@@ -112,7 +110,7 @@ while True:
             print("Please eat something!")
             food_inventory_items = hero_inventory.food_items()
             if len(food_inventory_items) == 0:
-                print_board()
+                board.print_board()
                 print("Stamina is over! No any food! The End!")
                 break
             for k in food_inventory_items:

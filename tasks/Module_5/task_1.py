@@ -50,7 +50,7 @@ class Inventory:
         print(f"{item_name} was dropped")
         return self.inventory
 
-    def set_weight_multiplier(self):
+    def get_weight_multiplier(self):
         item_total = sum(self.inventory.values())
         if LIGHT_WEIGHT_THRESHOLD <= item_total < HEAVY_WEIGHT_THRESHOLD:
             return 0.9
