@@ -108,7 +108,7 @@ while True:
                     continue
 
             print("Please eat something!")
-            food_inventory_items = hero_inventory.food_items()
+            food_inventory_items = hero_inventory.get_food_items()
             if len(food_inventory_items) == 0:
                 board.print_board()
                 print("Stamina is over! No any food! The End!")

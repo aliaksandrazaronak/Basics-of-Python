@@ -60,7 +60,7 @@ class Inventory:
             return 0
         return 1.1
 
-    def food_items(self):
+    def get_food_items(self):
         return {k: v for k, v in self.inventory.items() if k in FOOD_ITEMS}
 
 
