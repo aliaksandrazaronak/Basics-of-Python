@@ -100,7 +100,7 @@ while True:
         print("========================")
 
         if stamina <= 0:
-            if len(hero_inventory.inventory) > 0:
+            if hero_inventory.inventory:
                 print("Please drop any item!")
                 response = pyip.inputYesNo(f"Do you want to drop any item?\n")
                 if response == 'yes':
@@ -109,7 +109,7 @@ while True:
 
             print("Please eat something!")
             food_inventory_items = hero_inventory.get_food_items()
-            if len(food_inventory_items) == 0:
+            if not food_inventory_items:
                 board.print_board()
                 print("Stamina is over! No any food! The End!")
                 break
